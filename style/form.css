@@ -60,3 +60,7 @@ p {
     padding: 8px 16px 8px 16px;
     margin-right: 16px;
 }
+
+.form-footer button:hover {
+    opacity: 0.8;
+}

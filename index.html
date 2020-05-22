@@ -12,11 +12,7 @@
     <div class="form">
         <div class="form-input">
             <p>Share <span>Board name</span> with others</p>
-            <div class="emails-input">
-                <div class="wrong-tag">
-                    <div class="tag-text">some@email.com</div>
-                    <div class="tag-remove-icon"><img src="./style/img/remove.svg" alt="remove tag"></div>    
-                </div>
+            <div class="emails-input" id="emails-input-1">
                 <div class="text-input">
                     <input type="text" placeholder="add more people...">
                 </div>
@@ -29,6 +25,19 @@
     </div>
 </body>
 <script>
-    var inputEmail = document.querySelector(".emails-input");
+    var inputEmail = document.querySelector("#emails-input-1");
     var emailInput = new EmailInput(inputEmail, {})
+    
+    var countEmailBtn = document.getElementById("count-email");
+    var addEmailBtn = document.getElementById("add-email");
+    
+    countEmailBtn.addEventListener("click", function(e) {
+        alert(emailInput.getValidEmailCount());
+        e.preventDefault();
+    })
+
+    addEmailBtn.addEventListener("click", function(e) {
+        emailInput.addRandomEmail();
+        e.preventDefault();
+    })
 </script>
