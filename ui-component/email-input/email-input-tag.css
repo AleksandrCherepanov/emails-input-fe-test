@@ -1,0 +1,19 @@
+.emails-input > .tag {
+    display: flex;
+    flex-direction: row;
+    margin-right: 8px;
+    background: rgba(102, 153, 255, 0.2);
+    border-radius: 100px;
+    padding: 0 10px 0 10px;
+}
+
+.emails-input > .wrong-tag {
+    display: flex;
+    flex-direction: row;
+    margin-right: 8px;
+    border-bottom: 1px dashed #D92929;
+}
+
+.emails-input .tag-remove-icon {
+    margin-left: 8px;
+}
