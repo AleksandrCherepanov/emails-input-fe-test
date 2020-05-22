@@ -40,4 +40,8 @@
         emailInput.addRandomEmail();
         e.preventDefault();
     })
+
+    emailInput.emailListChangeEventSubscribe(document, function(e) {
+        console.log(e.detail);
+    })
 </script>

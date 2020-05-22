@@ -1,7 +1,8 @@
 class EmailInput {
     imgPath = "./style/img/remove.svg";
     imgAlt = "remove tag";
-    
+    emailListChangeEvent = "email-list-change";
+
     emailList = [];
     validEmailList = [];
 
@@ -44,6 +45,14 @@ class EmailInput {
             "input", 
             this.eventCommaEnteringHandler.bind(this)
         );
+
+        this.event = new CustomEvent(
+            "email-list-change", 
+            {
+                 bubbles: true, 
+                 detail: {emailList: this.emailList }
+            }
+        );
     }
 
     eventEnterPressHandler(e) {
@@ -65,7 +74,6 @@ class EmailInput {
         if (commaPos !== -1) {
             var tags = this.input.value.split(",")
             tags.forEach((function(el) {
-                console.log(el);
                 this.createTag(el);
                 this.input.value = "";
                 e.preventDefault();
@@ -100,7 +108,22 @@ class EmailInput {
         newTag.appendChild(newTagRemoveIcon);
         
         this.inputElement.insertBefore(newTag, this.textInput);
+        
+        var emailListBefore = JSON.parse(JSON.stringify(this.emailList));
         this.emailList.push(trimmedEmail);
+        var emailListAfter = JSON.parse(JSON.stringify(this.emailList));
+
+        this.dispatchEmailListChangeEvent(emailListBefore, emailListAfter);
+    }
+
+    dispatchEmailListChangeEvent(emailListBefore, emailListAfter) {
+        this.inputElement.dispatchEvent(new CustomEvent(
+            this.emailListChangeEvent, 
+            {
+                 bubbles: true, 
+                 detail: {emailListBefore: emailListBefore, emailListAfter: emailListAfter }
+            }
+        ));
     }
 
     replaceEmailList(emailList) {
@@ -152,5 +175,9 @@ class EmailInput {
     isValidEmail(email) {
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(email);
+    }
+
+    emailListChangeEventSubscribe(element, callback) {
+        element.addEventListener(this.emailListChangeEvent, callback);
     }
 }
