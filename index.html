@@ -6,19 +6,16 @@
     <link href="./style/form.css" rel="stylesheet" type="text/css">     
     <link href="./ui-component/email-input/email-input.css" rel="stylesheet" type="text/css">
     <link href="./ui-component/email-input/email-input-tag.css" rel="stylesheet" type="text/css">
+    <script src="./ui-component/email-input/script.js"></script>
 </header>
 <body>
     <div class="form">
         <div class="form-input">
             <p>Share <span>Board name</span> with others</p>
             <div class="emails-input">
-                <div class="tag">
-                    <div class="tag-text">some@email.com</div>
-                    <div class="tag-remove-icon"><img src="./style/img/remove.svg" alt="remove tag"></div>    
-                </div>
                 <div class="wrong-tag">
                     <div class="tag-text">some@email.com</div>
-                    <div class="tag-remove-icon"></div>
+                    <div class="tag-remove-icon"><img src="./style/img/remove.svg" alt="remove tag"></div>    
                 </div>
                 <div class="text-input">
                     <input type="text" placeholder="add more people...">
@@ -31,3 +28,7 @@
         </div>
     </div>
 </body>
+<script>
+    var inputEmail = document.querySelector(".emails-input");
+    var emailInput = new EmailInput(inputEmail, {})
+</script>
