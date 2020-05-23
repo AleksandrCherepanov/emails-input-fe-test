@@ -21,13 +21,27 @@ function EmailInput(inputElement, options) {
     this._imgPath = options.imgPath !== undefined ? options.imgPath : this._imgPath;
     this._imgAlt = options.imgAlt !== undefined ? options.imgAlt : this._imgAlt;    
 
+    this._createEvent = function(type, isBubbled, isCancelable, detail) {
+        var event;
+        if(typeof(Event) === 'function') {
+            event = new CustomEvent(type, {
+                bubbles: isBubbled,
+                detail: detail
+            })
+        } else {
+            event = document.createEvent('CustomEvent');
+            event.initCustomEvent(type, isBubbled, isCancelable, detail);            
+        }
+
+        return event;
+    }
+
     this._dispatchEmailListChangeEvent = function(emailListBefore, emailListAfter) {
-        this._inputElement.dispatchEvent(new CustomEvent(
-            this._eventChangeType, 
-            {
-                 bubbles: true, 
-                 detail: {emailListBefore: emailListBefore, emailListAfter: emailListAfter }
-            }
+        this._inputElement.dispatchEvent(this._createEvent(
+            this._eventChangeType,
+            true,
+            true,
+            {emailListBefore: emailListBefore, emailListAfter: emailListAfter }
         ));
     }
 
@@ -40,7 +54,7 @@ function EmailInput(inputElement, options) {
             this._emailList.splice(indexRemove, 1);        
         }
 
-        elementRemove.remove();
+        elementRemove.parentNode.removeChild(elementRemove);
         var emailListAfter = JSON.parse(JSON.stringify(this._emailList));
 
         this._dispatchEmailListChangeEvent(emailListBefore, emailListAfter);
@@ -80,6 +94,10 @@ function EmailInput(inputElement, options) {
         if (trimmedEmail === "") {
             return;
         }
+
+        if (this._emailList.indexOf(trimmedEmail) > -1) {
+            return;
+        }
         
         var tagClass = this._isValidEmail(trimmedEmail) ? "tag" : "wrong-tag";
         var newTag = this._createElementDiv(tagClass);
@@ -113,6 +131,19 @@ function EmailInput(inputElement, options) {
         }
     }
 
+    this._eventBackspaceHandler = function (e) {
+        if (e.keyCode === 8 && this._input.value === "" && this._emailList.length > 0) {
+            var tags = Array.prototype.slice.call(this._inputElement.childNodes).filter(function(el) {
+                return el.className === "tag" || el.className === "wrong-tag";        
+            });
+            if (tags.length > 0) {
+                this._removeTag(tags.pop());        
+            }    
+            e.preventDefault();
+            e.stopPropagation();                
+        }
+    }
+
     this._eventFocusOutHandler = function(e) {
         this._createTag(this._input.value);
         this._input.value = "";
@@ -134,6 +165,7 @@ function EmailInput(inputElement, options) {
     }
 
     this._input.addEventListener("keydown", this._eventEnterPressHandler.bind(this));
+    this._input.addEventListener("keydown", this._eventBackspaceHandler.bind(this));
     this._input.addEventListener("focusout", this._eventFocusOutHandler.bind(this));
     this._input.addEventListener("input", this._eventCommaEnteringHandler.bind(this));
 
