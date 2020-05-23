@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<header>
+<html>
+<head>
     <meta charset="UTF-8">
     <title>Email input</title>
     <link href="./style/normalize.css" rel="stylesheet" type="text/css">
@@ -7,14 +8,14 @@
     <link href="./ui-component/email-input/email-input.css" rel="stylesheet" type="text/css">
     <link href="./ui-component/email-input/email-input-tag.css" rel="stylesheet" type="text/css">
     <script src="./ui-component/email-input/script.js"></script>
-</header>
+</head>
 <body>
     <div class="form">
         <div class="form-input">
             <p>Share <span>Board name</span> with others</p>
             <div class="emails-input" id="emails-input-1">
-                <div class="text-input">
-                    <input type="text" placeholder="add more people...">
+                <div class="text-input" id="emails-input-text-1">
+                    <input type="email" autocomplete="off" placeholder="add more people...">
                 </div>
             </div>
         </div>
@@ -23,25 +24,26 @@
             <button id="count-email">Get emails count</button>
         </div>
     </div>
+    <script>
+        var inputEmail = document.querySelector("#emails-input-1");
+        var emailInput = new EmailInput(inputEmail, {})
+        
+        var countEmailBtn = document.getElementById("count-email");
+        var addEmailBtn = document.getElementById("add-email");
+        
+        countEmailBtn.addEventListener("click", function(e) {
+            alert(emailInput.getValidEmailCount());
+            e.preventDefault();
+        })
+    
+        addEmailBtn.addEventListener("click", function(e) {
+            emailInput.addRandomEmail();
+            e.preventDefault();
+        })
+    
+        emailInput.emailListChangeEventSubscribe(document, function(e) {
+            console.log(e.detail);
+        })
+    </script>
 </body>
-<script>
-    var inputEmail = document.querySelector("#emails-input-1");
-    var emailInput = new EmailInput(inputEmail, {})
-    
-    var countEmailBtn = document.getElementById("count-email");
-    var addEmailBtn = document.getElementById("add-email");
-    
-    countEmailBtn.addEventListener("click", function(e) {
-        alert(emailInput.getValidEmailCount());
-        e.preventDefault();
-    })
-
-    addEmailBtn.addEventListener("click", function(e) {
-        emailInput.addRandomEmail();
-        e.preventDefault();
-    })
-
-    emailInput.emailListChangeEventSubscribe(document, function(e) {
-        console.log(e.detail);
-    })
-</script>
+</html>
