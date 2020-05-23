@@ -47,7 +47,8 @@ p {
 .form-footer button {
     border: none;
     cursor: pointer;
-
+    outline: none;
+    
     background-color: #4262FF;
     border-radius: 6px;
     color: #FFFFFF;

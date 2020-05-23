@@ -1,65 +1,33 @@
 class EmailInput {
     imgPath = "./style/img/remove.svg";
     imgAlt = "remove tag";
-    emailListChangeEvent = "email-list-change";
+    eventChange = "change";
 
     emailList = [];
-    validEmailList = [];
 
     constructor(inputElement, options) {
         this.inputElement = inputElement;
-        
-        this.input = inputElement.querySelector(
-            options.inputTag !== undefined 
-            ? options.inputTag
-            : "input"
-        );
+        this.eventChangeType = this.inputElement.id + ' ' + this.eventChange;
 
-        this.textInput = inputElement.querySelector(
-            options.classDivInput !== undefined 
-            ? options.classDivInput
-            : ".text-input"            
-        );
+        this.input = inputElement.querySelector(options.inputTag !== undefined ? options.inputTag : "input");
+        this.textInput = inputElement.querySelector(options.classDivInput !== undefined ? options.classDivInput : ".text-input");
 
         this.options = options;
 
-        this.imgPath = options.imgPath !== undefined 
-            ? options.imgPath
-            : this.imgPath;
+        this.imgPath = options.imgPath !== undefined ? options.imgPath : this.imgPath;
+        this.imgAlt = options.imgAlt !== undefined ? options.imgAlt : this.imgAlt;    
 
-        this.imgAlt = options.imgAlt !== undefined
-            ? options.imgAlt
-            : this.imgAlt;    
-
-        this.input.addEventListener(
-            "keydown", 
-            this.eventEnterPressHandler.bind(this)
-        );
-
-        this.input.addEventListener(
-            "focusout", 
-            this.eventFocusOutHandler.bind(this)
-        );
-
-        this.input.addEventListener(
-            "input", 
-            this.eventCommaEnteringHandler.bind(this)
-        );
-
-        this.event = new CustomEvent(
-            "email-list-change", 
-            {
-                 bubbles: true, 
-                 detail: {emailList: this.emailList }
-            }
-        );
+        this.input.addEventListener("keydown", this.eventEnterPressHandler.bind(this));
+        this.input.addEventListener("focusout", this.eventFocusOutHandler.bind(this));
+        this.input.addEventListener("input", this.eventCommaEnteringHandler.bind(this));
     }
 
     eventEnterPressHandler(e) {
         if (e.keyCode === 13) {
             this.createTag(this.input.value);    
             this.input.value = "";
-            e.preventDefault();                
+            e.preventDefault();
+            e.stopPropagation();                
         }
     }
 
@@ -67,6 +35,7 @@ class EmailInput {
         this.createTag(this.input.value);
         this.input.value = "";
         e.preventDefault();
+        e.stopPropagation();
     }
 
     eventCommaEnteringHandler(e) {
@@ -76,10 +45,25 @@ class EmailInput {
             tags.forEach((function(el) {
                 this.createTag(el);
                 this.input.value = "";
-                e.preventDefault();
             }).bind(this))
         } 
         e.preventDefault();
+        e.stopPropagation();
+    }
+
+    removeTag(elementRemove) {
+        var emailListBefore = JSON.parse(JSON.stringify(this.emailList));        
+        var emailRemove = elementRemove.querySelector(".tag-text").textContent;
+        var indexRemove = this.emailList.indexOf(emailRemove);
+        
+        if (indexRemove > -1) {
+            this.emailList.splice(indexRemove, 1);        
+        }
+
+        elementRemove.remove();
+        var emailListAfter = JSON.parse(JSON.stringify(this.emailList));
+
+        this.dispatchEmailListChangeEvent(emailListBefore, emailListAfter);
     }
 
     createTag(email) {
@@ -89,12 +73,7 @@ class EmailInput {
             return;
         }
         
-        var tagClass = "wrong-tag";
-        if(this.isValidEmail(trimmedEmail)) {
-            tagClass = "tag";
-            this.validEmailList.push(trimmedEmail);
-        }
-
+        var tagClass = this.isValidEmail(trimmedEmail) ? "tag" : "wrong-tag";
         var newTag = this.createElementDiv(tagClass);
 
         var newTagText = this.createElementDiv("tag-text");    
@@ -118,7 +97,7 @@ class EmailInput {
 
     dispatchEmailListChangeEvent(emailListBefore, emailListAfter) {
         this.inputElement.dispatchEvent(new CustomEvent(
-            this.emailListChangeEvent, 
+            this.eventChangeType, 
             {
                  bubbles: true, 
                  detail: {emailListBefore: emailListBefore, emailListAfter: emailListAfter }
@@ -127,7 +106,12 @@ class EmailInput {
     }
 
     replaceEmailList(emailList) {
+        var emailListBefore = JSON.parse(JSON.stringify(this.emailList));
         this.emailList = [];
+        var emailListAfter = JSON.parse(JSON.stringify(this.emailList));
+
+        this.dispatchEmailListChangeEvent(emailListBefore, emailListAfter);
+        
         while (this.inputElement.firstChild !== this.textInput) {
             this.inputElement.removeChild(this.inputElement.firstChild)
         }
@@ -149,13 +133,22 @@ class EmailInput {
     }
 
     getValidEmailCount() {
-        return this.validEmailList.length;
+        return this.emailList.filter((function(el) {
+            return this.isValidEmail(el);
+        }).bind(this)).length;
+    }
+
+    getEmailList() {
+        return this.emailList;
     }
 
     createElementImg() {
         var newImg = document.createElement("img");
         newImg.src = this.imgPath;
         newImg.alt = this.imgAlt;
+        newImg.addEventListener("click", (function(e) {
+            this.removeTag(e.target.parentElement.parentElement);
+        }).bind(this));
 
         return newImg;
     }
@@ -178,6 +171,6 @@ class EmailInput {
     }
 
     emailListChangeEventSubscribe(element, callback) {
-        element.addEventListener(this.emailListChangeEvent, callback);
+        element.addEventListener(this.eventChangeType, callback);
     }
 }
