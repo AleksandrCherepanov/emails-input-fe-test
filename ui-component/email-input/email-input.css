@@ -1,8 +1,11 @@
 .emails-input {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    overflow: auto;
     box-sizing: border-box;
     width: 100%;
+    max-height: 50%;
     background-color: #FFFFFF;
     border-radius: 4px;
     border: 1px solid #C3C2CF;
@@ -13,10 +16,14 @@
     line-height: 24px;
 }
 
+.emails-input .text-input {
+    width: 100%;
+}
+
 .emails-input .text-input input {
     border: none;
-    outline: none;
     width: 100%;
+    outline: none;
     background-color: #FFFFFF;
 }
 
