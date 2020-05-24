@@ -1,23 +1,26 @@
 .emails-input > .tag {
     display: flex;
-    flex-direction: row;
-    margin-right: 8px;
-    margin-bottom: 4px;
+
+    margin-right: 0.4rem;
+    margin-bottom: 0.2rem;
+
     background: rgba(102, 153, 255, 0.2);
-    border-radius: 100px;
-    padding: 0 10px 0 10px;
+    border-radius: 5rem;
+    
+    padding: 0 0.5rem 0 0.5rem;
 }
 
 .emails-input > .wrong-tag {
     display: flex;
-    flex-direction: row;
-    margin-bottom: 4px;
-    margin-right: 8px;
+
+    margin-bottom: 0.2rem;
+    margin-right: 0.4rem;
+
     border-bottom: 1px dashed #D92929;
 }
 
 .emails-input .tag-remove-icon {
-    margin-left: 8px;
+    margin-left: 0.4rem;
     -moz-user-select: none;
     user-select: none;
 }
