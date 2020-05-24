@@ -4,36 +4,29 @@ function EmailInput(inputElement, options) {
     options = options || {};
     this._emailList = [];
 
-    this._removeIconPath = "./ui-component/email-input/style/img/remove.svg";
-    this._removeIconPath = options.removeIconPath !== undefined 
-        ? options.removeIconPath 
-        : this._removeIconPath;
+    this._removeIconPath = options.removeIconPath !== undefined
+        ? options.removeIconPath
+        : "./ui-component/email-input/style/img/remove.svg";
 
-    this._imgAlt = "remove tag";
-    this._eventChange = "change";
-    this._parentOfInputId = "#emails-input-text-1"
-    var parentOfInputId = options.parentOfInputId !== undefined 
-        ? options.parentOfInputId 
-        : this._parentOfInputId
-    
+    var parentOfInputId = options.parentOfInputId !== undefined
+        ? options.parentOfInputId
+        : "#emails-input-text-1";
+
     this._inputElement = inputElement;
-    this._eventChangeName = this._inputElement.id + ' ' + this._eventChange;
-
     this._input = inputElement.querySelector("input");
     this._parentOfInputElement = inputElement.querySelector(parentOfInputId);
 
-    this._imgPath = options.imgPath !== undefined ? options.imgPath : this._imgPath;
-    this._imgAlt = options.imgAlt !== undefined ? options.imgAlt : this._imgAlt;    
+    this._eventChangeName = this._inputElement.id + "_change";
 
     this._createEvent = function(type, isBubbled, isCancelable, detail) {
         var event;
-        if(typeof(Event) === 'function') {
+        if(typeof(Event) === "function") {
             event = new CustomEvent(type, {
                 bubbles: isBubbled,
                 detail: detail
             })
         } else {
-            event = document.createEvent('CustomEvent');
+            event = document.createEvent("CustomEvent");
             event.initCustomEvent(type, isBubbled, isCancelable, detail);            
         }
 
@@ -79,7 +72,7 @@ function EmailInput(inputElement, options) {
     this._createElementImg = function() {
         var newImg = document.createElement("img");
         newImg.src = this._removeIconPath;
-        newImg.alt = this._imgAlt;
+        newImg.alt = "remove tag";
         newImg.addEventListener("click", (function(e) {
             this._removeTag(e.target.parentElement.parentElement);
         }).bind(this));
@@ -189,12 +182,11 @@ function EmailInput(inputElement, options) {
 
     this.addRandomEmail = function() {
         var partLength = 7;
-        var zoneLength = 3;
         
-        var email = Math.random().toString(36).substr(0, partLength).replace('.', '') + 
-            '@' +
-            Math.random().toString(36).substr(0, partLength).replace('.', '') +
-            '.com';
+        var email = Math.random().toString(36).substr(0, partLength).replace(".", "") + 
+            "@" +
+            Math.random().toString(36).substr(0, partLength).replace(".", "") +
+            ".com";
         
         this._createTag(email);    
     }
