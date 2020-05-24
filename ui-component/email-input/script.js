@@ -1,21 +1,25 @@
 "use strict";
 
 function EmailInput(inputElement, options) {
+    options = options || {};
     this._emailList = [];
 
-    this._imgPath = "./style/img/remove.svg";
+    this._removeIconPath = "./ui-component/email-input/style/img/remove.svg";
+    this._removeIconPath = options.removeIconPath !== undefined 
+        ? options.removeIconPath 
+        : this._removeIconPath;
+
     this._imgAlt = "remove tag";
     this._eventChange = "change";
-    this._parentOfInputId = "#emails-input-text-1";
-
-    this._inputElement = inputElement;
-    this._eventChangeType = this._inputElement.id + ' ' + this._eventChange;
-
-    this._input = inputElement.querySelector("input");
+    this._parentOfInputId = "#emails-input-text-1"
     var parentOfInputId = options.parentOfInputId !== undefined 
         ? options.parentOfInputId 
         : this._parentOfInputId
+    
+    this._inputElement = inputElement;
+    this._eventChangeName = this._inputElement.id + ' ' + this._eventChange;
 
+    this._input = inputElement.querySelector("input");
     this._parentOfInputElement = inputElement.querySelector(parentOfInputId);
 
     this._imgPath = options.imgPath !== undefined ? options.imgPath : this._imgPath;
@@ -36,12 +40,12 @@ function EmailInput(inputElement, options) {
         return event;
     }
 
-    this._dispatchEmailListChangeEvent = function(emailListBefore, emailListAfter) {
+    this._dispatchEmailListChangeEvent = function(eventType, emailListBefore, emailListAfter) {
         this._inputElement.dispatchEvent(this._createEvent(
-            this._eventChangeType,
+            this._eventChangeName,
             true,
             true,
-            {emailListBefore: emailListBefore, emailListAfter: emailListAfter }
+            {eventType: eventType, emailListBefore: emailListBefore, emailListAfter: emailListAfter }
         ));
     }
 
@@ -57,7 +61,7 @@ function EmailInput(inputElement, options) {
         elementRemove.parentNode.removeChild(elementRemove);
         var emailListAfter = JSON.parse(JSON.stringify(this._emailList));
 
-        this._dispatchEmailListChangeEvent(emailListBefore, emailListAfter);
+        this._dispatchEmailListChangeEvent("remove", emailListBefore, emailListAfter);
     }
 
     this._isValidEmail = function(email) {
@@ -74,7 +78,7 @@ function EmailInput(inputElement, options) {
 
     this._createElementImg = function() {
         var newImg = document.createElement("img");
-        newImg.src = this._imgPath;
+        newImg.src = this._removeIconPath;
         newImg.alt = this._imgAlt;
         newImg.addEventListener("click", (function(e) {
             this._removeTag(e.target.parentElement.parentElement);
@@ -111,15 +115,14 @@ function EmailInput(inputElement, options) {
         newTagRemoveIcon.appendChild(newImg)
         newTag.appendChild(newTagText);
         newTag.appendChild(newTagRemoveIcon);
-        
-        console.log(this._parentOfInputElement);
+
         this._inputElement.insertBefore(newTag, this._parentOfInputElement);
         
         var emailListBefore = JSON.parse(JSON.stringify(this._emailList));
         this._emailList.push(trimmedEmail);
         var emailListAfter = JSON.parse(JSON.stringify(this._emailList));
 
-        this._dispatchEmailListChangeEvent(emailListBefore, emailListAfter);
+        this._dispatchEmailListChangeEvent("add", emailListBefore, emailListAfter);
     }
 
     this._eventEnterPressHandler = function (e) {
@@ -174,7 +177,7 @@ function EmailInput(inputElement, options) {
         this._emailList = [];
         var emailListAfter = JSON.parse(JSON.stringify(this._emailList));
 
-        this._dispatchEmailListChangeEvent(emailListBefore, emailListAfter);
+        this._dispatchEmailListChangeEvent("replace", emailListBefore, emailListAfter);
         
         while (this._inputElement.firstChild !== this._parentOfInputElement) {
             this._inputElement.removeChild(this._inputElement.firstChild)
@@ -207,6 +210,6 @@ function EmailInput(inputElement, options) {
     }
 
     this.emailListChangeEventSubscribe = function(element, callback) {
-        element.addEventListener(this._eventChangeType, callback);
+        element.addEventListener(this._eventChangeName, callback);
     }
 }
