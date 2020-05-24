@@ -9,12 +9,12 @@
     font-weight: bold;
 }
 
-body {
+html {
     font-family: Open Sans;
     font-style: normal;
     font-weight: normal;
     font-size: 20px;
-    line-height: 27px;
+    line-height: 27px
 }
 
 p {
@@ -27,19 +27,19 @@ p {
     left: 50%;
     transform: translate(-50%, -50%);
 
-    width: 540px;
-    height: 300px;
+    width: 27rem;
+    height: 15rem;
 
-    box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
-    border-radius: 8px;    
+    box-shadow: 0px 0.4rem 1rem rgba(0,0,0,0.2);
+    border-radius: 0.4rem;    
 }
 
 .form-input {
     box-sizing: border-box;
-    width: 540px;
-    height: 204px;
+    width: 27rem;
+    height: 10.2rem;
     background-color: #F8F8F7;
-    padding: 32px 50px 24px 50px;
+    padding: 1.6rem 2.5rem 1.2rem 2.5rem;
 }
 
 .form-input p span {
@@ -47,7 +47,7 @@ p {
 }
 
 .form-footer {
-    padding: 24px 50px 24px 50px;
+    padding: 1.2rem 2.5rem 1.2rem 2.5rem;
 }
 
 .form-footer button {
@@ -56,16 +56,16 @@ p {
     outline: none;
     
     background-color: #4262FF;
-    border-radius: 6px;
+    border-radius: 0.3rem;
     color: #FFFFFF;
 
-    font-size: 14px;
-    line-height: 24px;
+    font-size: 0.7rem;
+    line-height: 1.2rem;
 
     text-align: center;
 
-    padding: 8px 16px 8px 16px;
-    margin-right: 16px;
+    padding: 0.4rem 0.8rem 0.4rem 0.8rem;
+    margin-right: 0.8rem;
 }
 
 .form-footer button:hover {

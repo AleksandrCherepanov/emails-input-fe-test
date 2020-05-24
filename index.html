@@ -5,9 +5,9 @@
     <title>Email input</title>
     <link href="./style/normalize.css" rel="stylesheet" type="text/css">
     <link href="./style/form.css" rel="stylesheet" type="text/css">     
-    <link href="./ui-component/email-input/email-input.css" rel="stylesheet" type="text/css">
-    <link href="./ui-component/email-input/email-input-tag.css" rel="stylesheet" type="text/css">
-    <script src="./ui-component/email-input/script.js"></script>
+    <link href="./ui-component/email-input/style/email-input.css" rel="stylesheet" type="text/css">
+    <link href="./ui-component/email-input/style/email-input-tag.css" rel="stylesheet" type="text/css">
+    <script src="./ui-component/email-input/email-input.js"></script>
 </head>
 <body>
     <div class="form">
@@ -26,20 +26,19 @@
     </div>
     <script>
         var inputEmail = document.querySelector("#emails-input-1");
-        var emailInput = new EmailInput(inputEmail, {})
+        var emailInput = new EmailInput(inputEmail);
         
-        var countEmailBtn = document.getElementById("count-email");
-        var addEmailBtn = document.getElementById("add-email");
-        
+        var countEmailBtn = document.getElementById("count-email");    
         countEmailBtn.addEventListener("click", function(e) {
             alert(emailInput.getValidEmailCount());
             e.preventDefault();
         })
     
+        var addEmailBtn = document.getElementById("add-email");
         addEmailBtn.addEventListener("click", function(e) {
             emailInput.addRandomEmail();
             e.preventDefault();
-        })
+        });
     
         emailInput.emailListChangeEventSubscribe(document, function(e) {
             console.log(e.detail);
